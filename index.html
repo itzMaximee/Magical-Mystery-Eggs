@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Magical Mystery Eggs</title>
+    <style>
+        body {
+            font-family: 'Cinzel Decorative', cursive;
+            background-color: #2c1a0f;
+            color: #d4af37;
+            text-align: center;
+            padding: 20px;
+            background-image: url('https://www.transparenttextures.com/patterns/old-map.png');
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 3px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        select, button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 18px;
+            background-color: #4a2b0f;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #6d4a2b;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 24px;
+            min-height: 100px;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: glow 1s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #d4af37; }
+            to { box-shadow: 0 0 20px #d4af37; }
+        }
+
+        .price {
+            color: #7fb800;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🪄 Magical Mystery Eggs 🐾</h1>
+        <select id="eggType">
+            <option value="common">Common Egg (10 Galleons)</option>
+            <option value="rare">Rare Egg (30 Galleons)</option>
+            <option value="ultra">Ultra Egg (65 Galleons)</option>
+        </select>
+        <br>
+        <button onclick="openEgg()">Open Egg! 🥚</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const tiers = {
+            common: {
+                chances: [60, 30, 10], // X, XX, XXX
+                animals: {
+                    X: ["Frog (6 Sickle)", "Owl (6 Sickle)", "Normal Dog (10 Sickle)", "Normal Cat (10 Sickle)"],
+                    XX: ["Puffskein (1 Galleon)", "Jobberknoll (2 Galleon)", "Bowtruckle (7 Galleon)", 
+                         "Diricawl (5 Galleon)", "Porlock (6 Galleon)", "Mooncalf (10 Galleon)"],
+                    XXX: ["Fwooper (11 Galleon)", "Ashwinder (13 Galleon)", "Doxy (11 Galleon)", 
+                         "Murtlap (11 Galleon)"]
+                }
+            },
+            rare: {
+                chances: [20, 50, 30], // X, XX, XXX
+                animals: {
+                    X: ["Frog (6 Sickle)", "Owl (6 Sickle)", "Normal Dog (10 Sickle)", "Normal Cat (10 Sickle)"],
+                    XX: ["Puffskein (1 Galleon)", "Jobberknoll (2 Galleon)", "Bowtruckle (7 Galleon)",
+                         "Diricawl (5 Galleon)", "Porlock (6 Galleon)", "Augurey (30 Galleon)",
+                         "Fairy (40 Galleon)", "Mooncalf (10 Galleon)"],
+                    XXX: ["Fwooper (11 Galleon)", "Jarvey (15 Galleon)", "Niffler (30 Galleon)",
+                         "Fire Dwelling Salamander (27 Galleon)", "Crup (16 Galleon)", "Pixie (15 Galleon)",
+                         "Hippocampus (22 Galleon)", "Kneazle (17 Galleon)"]
+                }
+            },
+            ultra: {
+                chances: [5, 30, 65], // X, XX, XXX
+                animals: {
+                    X: ["Frog (6 Sickle)", "Owl (6 Sickle)", "Normal Dog (10 Sickle)", "Normal Cat (10 Sickle)"],
+                    XX: ["Augurey (30 Galleon)", "Fairy (40 Galleon)"],
+                    XXX: ["Hippogriff (70 Galleon)", "Matagot (100 Galleon)", "Fire Dwelling Salamander (27 Galleon)",
+                         "Frost Salamander (26 Galleon)", "Peruvian Salamander (25 Galleon)", "Niffler (30 Galleon)",
+                         "Jarvey (15 Galleon)", "Hippocampus (22 Galleon)", "Kneazle (17 Galleon)"]
+                }
+            }
+        };
+
+        function openEgg() {
+            const eggType = document.getElementById('eggType').value;
+            const tier = tiers[eggType];
+            const random = Math.random() * 100;
+            
+            let category;
+            if (random < tier.chances[0]) category = 'X';
+            else if (random < tier.chances[0] + tier.chances[1]) category = 'XX';
+            else category = 'XXX';
+
+            const animals = tier.animals[category];
+            const result = animals[Math.floor(Math.random() * animals.length)];
+            
+            displayResult(result);
+        }
+
+        function displayResult(animal) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="reveal-animation">
+                    <h2>✨ You found a... ✨</h2>
+                    <div class="animal-name">${animal.split(' (')[0]}</div>
+                    <div class="price">${animal.split(' (')[1].replace(')', '')}</div>
+                </div>
+            `;
+            
+            // Add temporary animation class
+            resultDiv.style.animation = 'none';
+            void resultDiv.offsetWidth; // Trigger reflow
+            resultDiv.style.animation = null;
+        }
+    </script>
+</body>
+</html>
